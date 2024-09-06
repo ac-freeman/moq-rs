@@ -12,6 +12,10 @@ use moq_transport::{
 	session::{Publisher, Subscriber},
 };
 
+// Term1: sudo make run
+// Term2: cargo run -p moq-clock -- https://localhost:4443 --publish
+// Term3: cargo run -p moq-clock -- https://localhost:4443 // --bind [::]:0
+
 #[derive(Parser, Clone)]
 pub struct Cli {
 	/// Listen for UDP packets on the given address.
