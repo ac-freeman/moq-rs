@@ -29,6 +29,10 @@ Then, visit https://quic.video/publish/?server=localhost:4443.
 
 For more control, use the [dev helper scripts](dev/README.md).
 
+# Changing the relay configuration
+
+You can add/remove relays in `docker-compose.yml`. However, you will have to delete the files `/dev/localhost.crt` and `/dev/localhost.key` to force-regenerate the certificates. 
+
 # Usage
 
 ## moq-relay
