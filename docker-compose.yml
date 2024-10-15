@@ -17,6 +17,9 @@ services:
     image: redis:7
     ports:
       - "6379"
+    command: ["redis-server", "--bind", "127.0.0.1", "--bind", "0.0.0.0"]
+    networks:
+      - isolated_network
 
   api:
     <<: *x-moq
@@ -24,6 +27,8 @@ services:
     command: --redis redis://redis:6379
     ports:
       - "80"
+    networks:
+      - isolated_network
 
   relay1:
     <<: *x-moq
@@ -35,6 +40,8 @@ services:
     ports:
       - "4443:443"
       - "4443:443/udp"
+    networks:
+      - isolated_network
 
   relay2:
     <<: *x-moq
@@ -46,6 +53,8 @@ services:
     ports:
       - "4444:443"
       - "4444:443/udp"
+    networks:
+      - isolated_network
 
   dir:
     <<: *x-moq
@@ -53,6 +62,8 @@ services:
     command: --tls-cert /etc/tls/cert --tls-key /etc/tls/key
     ports:
       - "443/udp"
+    networks:
+      - isolated_network
 
   install-certs:
     image: golang:latest
@@ -65,6 +76,12 @@ services:
       - certs:/etc/ssl/certs
       - ./dev/go.mod:/work/go.mod:ro
       - ./dev/go.sum:/work/go.sum:ro
+    networks:
+      - isolated_network
+
+networks:
+  isolated_network:
+    driver: bridge
 
 volumes:
   certs:
