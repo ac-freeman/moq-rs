@@ -33,7 +33,7 @@ CMD [ "publish" ]
 FROM debian:bookworm-slim
 
 RUN apt-get update && \
-	apt-get install -y --no-install-recommends ca-certificates curl libssl3 iputils-ping && \
+	apt-get install -y --no-install-recommends ca-certificates curl libssl3 iputils-ping tcpdump iproute2 && \
 	rm -rf /var/lib/apt/lists/*
 
 LABEL org.opencontainers.image.source=https://github.com/kixelated/moq-rs
