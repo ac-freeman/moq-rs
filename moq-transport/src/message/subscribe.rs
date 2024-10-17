@@ -31,6 +31,10 @@ impl Decode for Subscribe {
 		let track_alias = u64::decode(r)?;
 		let track_namespace = String::decode(r)?;
 		let track_name = String::decode(r)?;
+		dbg!(id);
+		dbg!(track_alias);
+		dbg!(track_namespace.clone());
+		dbg!(track_name.clone());
 
 		let filter_type = FilterType::decode(r)?;
 
@@ -57,18 +61,25 @@ impl Decode for Subscribe {
 			}
 		}
 
+		dbg!(start.clone());
+		dbg!(end.clone());
+
 		if let Some(s) = &start {
 			// You can't have a start object without a start group.
 			if s.group == SubscribeLocation::None && s.object != SubscribeLocation::None {
+				dbg!("a");
 				return Err(DecodeError::InvalidSubscribeLocation);
 			}
 		}
 		if let Some(e) = &end {
 			// You can't have an end object without an end group.
 			if e.group == SubscribeLocation::None && e.object != SubscribeLocation::None {
+				dbg!("b");
 				return Err(DecodeError::InvalidSubscribeLocation);
 			}
 		}
+
+		dbg!("through");
 
 		// NOTE: There's some more location restrictions in the draft, but they're enforced at a higher level.
 
@@ -149,6 +160,7 @@ pub enum SubscribeLocation {
 impl Decode for SubscribeLocation {
 	fn decode<R: bytes::Buf>(r: &mut R) -> Result<Self, DecodeError> {
 		let kind = u64::decode(r)?;
+		dbg!("c");
 
 		match kind {
 			0 => Ok(Self::None),

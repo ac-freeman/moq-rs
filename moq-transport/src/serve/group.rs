@@ -165,6 +165,14 @@ impl GroupsReader {
 		let state = self.state.lock();
 		state.latest.as_ref().map(|group| (group.group_id, group.latest()))
 	}
+
+	pub fn set_latest(&mut self) {
+		let latest = self.latest();
+		let state = self.state.lock();
+		if let Some((group_id, object_id)) = latest {
+			self.epoch = group_id;
+		}
+	}
 }
 
 impl Deref for GroupsReader {
@@ -337,6 +345,11 @@ impl GroupReader {
 	pub fn latest(&self) -> u64 {
 		let state = self.state.lock();
 		state.objects.last().map(|o| o.object_id).unwrap_or_default()
+	}
+
+	pub fn set_latest(&mut self) {
+		let latest = self.latest();
+		self.index = latest as usize;
 	}
 
 	pub async fn read_next(&mut self) -> Result<Option<Bytes>, ServeError> {
