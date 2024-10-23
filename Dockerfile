@@ -26,5 +26,8 @@ COPY ./deploy/moq-bbb /usr/local/bin/moq-bbb
 # Copy over the built binaries.
 COPY --from=builder /usr/local/cargo/bin/moq-* /usr/local/bin
 
+RUN apt-get update && \
+	apt-get install -y --no-install-recommendsiputils-ping tcpdump iproute2 && \
+	rm -rf /var/lib/apt/lists/*
 # Default to moq-relay
 CMD ["moq-relay"]

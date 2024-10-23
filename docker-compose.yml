@@ -14,8 +14,12 @@ services:
     entrypoint: moq-relay
     command: --tls-cert /etc/tls/cert --tls-key /etc/tls/key --tls-disable-verify --cluster-node relay1 --cluster-root relay1 --dev
     ports:
-      - "4443:443"
-      - "4443:443/udp"
+      - "127.0.0.1:4443:443"
+      - "127.0.0.1:4443:443/udp"
+    networks:
+      - isolated_network
+    cap_add:
+      - NET_ADMIN
 
   relay2:
     <<: *x-moq
@@ -24,8 +28,26 @@ services:
     depends_on:
       - relay1
     ports:
-      - "4444:443"
-      - "4444:443/udp"
+      - "127.0.0.1:4444:443"
+      - "127.0.0.1:4444:443/udp"
+    networks:
+      - isolated_network
+    cap_add:
+      - NET_ADMIN
+
+  relay3:
+    <<: *x-moq
+    entrypoint: moq-relay
+    command: --tls-cert /etc/tls/cert --tls-key /etc/tls/key --tls-disable-verify --api http://api --node https://relay3 --dev --announce https://dir
+    depends_on:
+      - relay2
+    ports:
+      - "127.0.0.1:4445:443"
+      - "127.0.0.1:4445:443/udp"
+    networks:
+      - isolated_network
+    cap_add:
+      - NET_ADMIN
 
   pub:
     <<: *x-moq
@@ -33,6 +55,8 @@ services:
     command: --tls-disable-verify --broadcast bbb --url https://relay1
     depends_on:
       - relay1
+    networks:
+      - isolated_network
 
   install-certs:
     image: golang:latest
@@ -45,6 +69,13 @@ services:
       - certs:/etc/ssl/certs
       - ./dev/go.mod:/work/go.mod:ro
       - ./dev/go.sum:/work/go.sum:ro
+    networks:
+      - isolated_network
+
+networks:
+  isolated_network:
+    driver: bridge
+    internal: true
 
 volumes:
   certs:
