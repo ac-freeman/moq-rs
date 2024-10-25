@@ -262,6 +262,12 @@ impl TrackConsumer {
 		state.latest.as_ref().map(|group| group.sequence).unwrap_or_default()
 	}
 
+	// pub fn set_latest(&mut self) {
+	// 	let latest = self.latest_group();
+	// 	let state = self.state.borrow_mut();
+	// 	state.latest = Some(latest);
+	// }
+
 	pub async fn closed(&self) -> Result<(), Error> {
 		match self.state.clone().wait_for(|state| state.closed.is_err()).await {
 			Ok(state) => state.closed.clone(),

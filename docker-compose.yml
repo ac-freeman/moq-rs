@@ -27,12 +27,12 @@ services:
       - "4444:443"
       - "4444:443/udp"
 
-  pub:
-    <<: *x-moq
-    entrypoint: moq-bbb
-    command: --tls-disable-verify --broadcast bbb --url https://relay1
-    depends_on:
-      - relay1
+#  pub:
+#    <<: *x-moq
+#    entrypoint: moq-bbb
+#    command: --tls-disable-verify --broadcast bbb --url https://relay1
+#    depends_on:
+#      - relay1
 
   install-certs:
     image: golang:latest
