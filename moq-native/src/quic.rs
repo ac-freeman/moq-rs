@@ -53,9 +53,9 @@ impl Endpoint {
 		let mut transport = quinn::TransportConfig::default();
 		transport.max_idle_timeout(Some(time::Duration::from_secs(10).try_into().unwrap()));
 		transport.keep_alive_interval(Some(time::Duration::from_secs(4))); // TODO make this smarter
-		// transport.congestion_controller_factory(Arc::new(quinn::congestion::BbrConfig::default()));  // BAD
+		transport.congestion_controller_factory(Arc::new(quinn::congestion::BbrConfig::default()));  // BAD
 		// transport.congestion_controller_factory(Arc::new(quinn::congestion::CubicConfig::default())); // BAD
-		transport.congestion_controller_factory(Arc::new(quinn::congestion::NewRenoConfig::default()));	// GOOD (I think)
+		// transport.congestion_controller_factory(Arc::new(quinn::congestion::NewRenoConfig::default()));	// GOOD (I think)
 		transport.mtu_discovery_config(None); // Disable MTU discovery
 		let transport = Arc::new(transport);
 
